@@ -39,5 +39,5 @@ LoadSkiaWeb()
     );
   })
   .catch((err) => {
-    console.error("Failed to initialize Skia for Web:", err);
+    console.error("CUSTOM: Failed to initialize Skia for Web:", err);
   });

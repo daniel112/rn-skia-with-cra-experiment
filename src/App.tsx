@@ -1,8 +1,8 @@
 import React from "react";
 import "./App.css";
 
-// DYO: ERROR RUNTIME HERE DUE TO ALIASING(?)
 import { Canvas, Circle } from "@shopify/react-native-skia";
+import Breathe from "./Breathe";
 
 const CircleDemo = () => {
   const r = 128;
@@ -29,6 +29,7 @@ function App() {
           Learn React
         </a>
         <CircleDemo />
+        {/* <Breathe /> */}
       </header>
     </div>
   );

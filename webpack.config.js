@@ -96,9 +96,9 @@ const configuration = {
     new ProvidePlugin({
       React: "react", // Automatically load React when it is used
     }),
-    new DefinePlugin({
-      "react-native$": "react-native-web",
-    }),
+    // new DefinePlugin({
+    //   "react-native$": "react-native-web",
+    // }),
   ],
   devServer: {
     static: {
