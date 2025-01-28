@@ -3,9 +3,12 @@ import "./App.css";
 
 import { Canvas, Circle } from "@shopify/react-native-skia";
 import Breathe from "./Breathe";
+import { useSharedValue } from "react-native-reanimated";
 
 const CircleDemo = () => {
   const r = 128;
+  // const colorsIndex = useSharedValue(0);
+
   return (
     <Canvas style={{ flex: 1 }}>
       <Circle cx={r} cy={r} r={r} color="lightblue" />
