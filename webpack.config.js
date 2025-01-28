@@ -1,26 +1,30 @@
-// Install necessary packages before starting:
-// npm install react react-dom typescript @types/react @types/react-dom webpack webpack-cli webpack-dev-server ts-loader html-webpack-plugin --save-dev
-
 const fs = require("fs");
 const path = require("path");
 const { sources, DefinePlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
-const CopyPlugin = require("copy-webpack-plugin");
 
 const configuration = {
   mode: "development",
-  entry: "./src/index.tsx", // Entry point of your app
+  entry: ["babel-polyfill", "./src/index.tsx"],
   output: {
     path: path.resolve(__dirname, "dist"), // Output directory
     filename: "bundle.js", // Output bundle file
     clean: true, // Clean the output directory before build
   },
   resolve: {
-    extensions: [".web.js", ".web.ts", ".web.tsx", ".js", ".ts", ".tsx", "..."],
+    extensions: [".web.js", ".web.ts", ".web.tsx", ".js", ".ts", ".tsx"],
     alias: {
       "@components": path.resolve(__dirname, "src/components/"),
       "@assets": path.resolve(__dirname, "src/assets/"),
+      // below is from the react native skia doc, it doesn't work
+      // we just resolve it to an empty module
+      // "react-native/Libraries/Image/AssetRegistry": false,
+      "react-native/Libraries/Image/AssetRegistry": path.resolve(
+        __dirname,
+        "src/emptyModule.js"
+      ), // Alias for AssetRegistry
+      "react-native": "react-native-web", // Alias react-native to react-native-web
     },
   },
   module: {
@@ -29,6 +33,21 @@ const configuration = {
         test: /\.(ts|tsx)$/, // Handle TypeScript files
         use: "ts-loader",
         exclude: /node_modules/,
+      },
+      {
+        test: /\.(js|jsx)$/, // Handle JavaScript files
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [
+              "@babel/preset-env",
+              "@babel/preset-react",
+              "@babel/preset-typescript",
+            ],
+            plugins: ["@babel/plugin-proposal-class-properties"],
+          },
+        },
       },
       {
         test: /\.css$/, // Handle CSS files
@@ -45,6 +64,13 @@ const configuration = {
       template: "./public/index.html", // HTML template
       favicon: "./public/favicon.ico", // Favicon (optional)
     }),
+    new DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("development"),
+    }),
+    new NodePolyfillPlugin(),
+    new DefinePlugin({
+      "react-native$": "react-native-web",
+    }),
   ],
   devServer: {
     static: {
@@ -60,14 +86,6 @@ const newConfiguration = {
   ...configuration,
   plugins: [
     ...configuration.plugins,
-    // 1. Make the wasm file available to the build system
-    // new CopyPlugin({
-    //   patterns: [
-    //     {
-    //       from: "node_modules/canvaskit-wasm/bin/full/canvaskit.wasm",
-    //     },
-    //   ],
-    // }),
     // 1. Ensure wasm file availability
     new (class CopySkiaPlugin {
       apply(compiler) {
@@ -93,32 +111,7 @@ const newConfiguration = {
         });
       }
     })(),
-    // 2. Polyfill fs and path module from node
-    new NodePolyfillPlugin(),
-    // new DefinePlugin({
-    //   "react-native$": "react-native-web",
-    // }),
   ],
-  resolve: {
-    ...configuration.resolve,
-    alias: {
-      ...configuration.alias,
-      // "react-native": "react-native-web",
-      // 3. Suppress reanimated module warning
-      // This assumes Reanimated is installed, if not you can use false.
-      "react-native-reanimated/package.json": require.resolve(
-        "react-native-reanimated/package.json"
-      ),
-      "react-native-reanimated": require.resolve("react-native-reanimated"),
-      // below is from the react native skia doc, it doesn't work
-      // we just resolve it to an empty module
-      // "react-native/Libraries/Image/AssetRegistry": false,
-      "react-native/Libraries/Image/AssetRegistry": path.resolve(
-        __dirname,
-        "src/emptyModule.js"
-      ), // Alias for AssetRegistry
-    },
-  },
 };
 
 module.exports = newConfiguration;
