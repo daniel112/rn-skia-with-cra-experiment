@@ -60,32 +60,6 @@ const configuration = {
     ],
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      template: "./public/index.html", // HTML template
-      favicon: "./public/favicon.ico", // Favicon (optional)
-    }),
-    new DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify("development"),
-    }),
-    new NodePolyfillPlugin(),
-    new DefinePlugin({
-      "react-native$": "react-native-web",
-    }),
-  ],
-  devServer: {
-    static: {
-      directory: path.join(__dirname, "public"), // Serve static files
-    },
-    port: 3000, // Dev server port
-    open: true, // Automatically open the browser
-    hot: true, // Enable hot module replacement
-  },
-};
-
-const newConfiguration = {
-  ...configuration,
-  plugins: [
-    ...configuration.plugins,
     // 1. Ensure wasm file availability
     new (class CopySkiaPlugin {
       apply(compiler) {
@@ -111,7 +85,26 @@ const newConfiguration = {
         });
       }
     })(),
+    new HtmlWebpackPlugin({
+      template: "./public/index.html", // HTML template
+      favicon: "./public/favicon.ico", // Favicon (optional)
+    }),
+    new DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("development"),
+    }),
+    new NodePolyfillPlugin(),
+    new DefinePlugin({
+      "react-native$": "react-native-web",
+    }),
   ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "public"), // Serve static files
+    },
+    port: 3000, // Dev server port
+    open: true, // Automatically open the browser
+    hot: true, // Enable hot module replacement
+  },
 };
 
-module.exports = newConfiguration;
+module.exports = configuration;

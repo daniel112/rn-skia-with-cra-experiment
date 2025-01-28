@@ -5,8 +5,10 @@ module.exports = {
     "@babel/preset-typescript",
   ],
   plugins: [
-    "@babel/plugin-proposal-export-namespace-from",
-    "react-native-reanimated/plugin",
     "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-proposal-export-namespace-from",
+    // NOTE: Make sure to list react-native-reanimated/plugin last.
+    // ref: https://docs.swmansion.com/react-native-reanimated/docs/guides/web-support/#webpack-support
+    "react-native-reanimated/plugin",
   ],
 };
