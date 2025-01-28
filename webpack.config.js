@@ -3,9 +3,10 @@
 
 const fs = require("fs");
 const path = require("path");
-const { sources } = require("webpack");
+const { sources, DefinePlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const configuration = {
   mode: "development",
@@ -16,7 +17,7 @@ const configuration = {
     clean: true, // Clean the output directory before build
   },
   resolve: {
-    extensions: [".ts", ".tsx", ".js"], // Resolve these extensions
+    extensions: [".web.js", ".web.ts", ".web.tsx", ".js", ".ts", ".tsx", "..."],
     alias: {
       "@components": path.resolve(__dirname, "src/components/"),
       "@assets": path.resolve(__dirname, "src/assets/"),
@@ -59,6 +60,14 @@ const newConfiguration = {
   ...configuration,
   plugins: [
     ...configuration.plugins,
+    // 1. Make the wasm file available to the build system
+    // new CopyPlugin({
+    //   patterns: [
+    //     {
+    //       from: "node_modules/canvaskit-wasm/bin/full/canvaskit.wasm",
+    //     },
+    //   ],
+    // }),
     // 1. Ensure wasm file availability
     new (class CopySkiaPlugin {
       apply(compiler) {
@@ -84,20 +93,30 @@ const newConfiguration = {
         });
       }
     })(),
-    // 2. Polyfill fs and path modules
+    // 2. Polyfill fs and path module from node
     new NodePolyfillPlugin(),
+    // new DefinePlugin({
+    //   "react-native$": "react-native-web",
+    // }),
   ],
   resolve: {
     ...configuration.resolve,
     alias: {
       ...configuration.alias,
+      // "react-native": "react-native-web",
       // 3. Suppress reanimated module warning
       // This assumes Reanimated is installed, if not you can use false.
       "react-native-reanimated/package.json": require.resolve(
         "react-native-reanimated/package.json"
       ),
       "react-native-reanimated": require.resolve("react-native-reanimated"),
-      "react-native/Libraries/Image/AssetRegistry": false,
+      // below is from the react native skia doc, it doesn't work
+      // we just resolve it to an empty module
+      // "react-native/Libraries/Image/AssetRegistry": false,
+      "react-native/Libraries/Image/AssetRegistry": path.resolve(
+        __dirname,
+        "src/emptyModule.js"
+      ), // Alias for AssetRegistry
     },
   },
 };
