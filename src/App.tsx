@@ -1,16 +1,17 @@
 import React from "react";
 import "./App.css";
 
-// import { Canvas, Circle } from "@shopify/react-native-skia";
+// DYO: ERROR RUNTIME HERE DUE TO ALIASING(?)
+import { Canvas, Circle } from "@shopify/react-native-skia";
 
-// const CircleDemo = () => {
-//   const r = 128;
-//   return (
-//     <Canvas style={{ flex: 1 }}>
-//       <Circle cx={r} cy={r} r={r} color="lightblue" />
-//     </Canvas>
-//   );
-// };
+const CircleDemo = () => {
+  const r = 128;
+  return (
+    <Canvas style={{ flex: 1 }}>
+      <Circle cx={r} cy={r} r={r} color="lightblue" />
+    </Canvas>
+  );
+};
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         >
           Learn React
         </a>
+        <CircleDemo />
       </header>
     </div>
   );

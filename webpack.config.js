@@ -1,6 +1,6 @@
 const fs = require("fs");
 const path = require("path");
-const { sources, DefinePlugin } = require("webpack");
+const { sources, DefinePlugin, ProvidePlugin } = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const NodePolyfillPlugin = require("node-polyfill-webpack-plugin");
 
@@ -93,6 +93,9 @@ const configuration = {
       "process.env.NODE_ENV": JSON.stringify("development"),
     }),
     new NodePolyfillPlugin(),
+    new ProvidePlugin({
+      React: "react", // Automatically load React when it is used
+    }),
     new DefinePlugin({
       "react-native$": "react-native-web",
     }),
