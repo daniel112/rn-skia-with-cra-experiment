@@ -13,7 +13,7 @@ const configuration = {
     clean: true, // Clean the output directory before build
   },
   resolve: {
-    extensions: [".web.js", ".web.ts", ".web.tsx", ".js", ".ts", ".tsx"],
+    extensions: [".web.js", ".js", ".ts", ".tsx"],
     alias: {
       // below is from the react native skia doc, it doesn't work
       // we just resolve it to an empty module
