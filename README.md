@@ -11,10 +11,12 @@ Following the documentation doesn't work as expected. The `react-native-skia` an
 ## What Works
 
 Importing and rendering skia components seems to work ok. I am able to load basic Circle component. Any functionality that doesn't use `react-native-reanimated` works fine so far.
+![](./images/basic-circle-skia.png)
 
 ## Blocker
 
 - `react-native-skia` has external use/dependency on `react-native-reanimated`. After all the set up recommended by the docs above, there is an issue where the webApp is unable to load any hooks from `react-native-reanimated`.
+  ![](./images/reanimated-error.png)
 
 ## Approach
 
