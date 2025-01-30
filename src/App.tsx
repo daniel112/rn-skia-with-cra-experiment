@@ -1,20 +1,9 @@
 import React from "react";
 import "./App.css";
-
-import { Canvas, Circle } from "@shopify/react-native-skia";
-import Breathe from "./Breathe";
-import { useSharedValue } from "react-native-reanimated";
-
-const CircleDemo = () => {
-  const r = 128;
-  // const colorsIndex = useSharedValue(0);
-
-  return (
-    <Canvas style={{ flex: 1 }}>
-      <Circle cx={r} cy={r} r={r} color="lightblue" />
-    </Canvas>
-  );
-};
+import "raf/polyfill";
+// import Breathe from "./experiments/Breathe";
+import { CircleDemo } from "./experiments/BasicCircle";
+import { AnimatedImages } from "./experiments/AnimatedImages";
 
 function App() {
   return (
@@ -32,6 +21,7 @@ function App() {
           Learn React
         </a>
         <CircleDemo />
+        {/* <AnimatedImages /> */}
         {/* <Breathe /> */}
       </header>
     </div>

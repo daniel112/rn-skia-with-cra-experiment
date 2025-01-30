@@ -15,8 +15,6 @@ const configuration = {
   resolve: {
     extensions: [".web.js", ".web.ts", ".web.tsx", ".js", ".ts", ".tsx"],
     alias: {
-      "@components": path.resolve(__dirname, "src/components/"),
-      "@assets": path.resolve(__dirname, "src/assets/"),
       // below is from the react native skia doc, it doesn't work
       // we just resolve it to an empty module
       // "react-native/Libraries/Image/AssetRegistry": false,
@@ -29,6 +27,17 @@ const configuration = {
   },
   module: {
     rules: [
+      {
+        test: /\.(gif|png|jpe?g|svg)$/i,
+        use: [
+          {
+            loader: "file-loader",
+            options: {
+              name: "[path][name].[ext]",
+            },
+          },
+        ],
+      },
       {
         test: /\.(ts|tsx)$/, // Handle TypeScript files
         use: "ts-loader",
@@ -96,9 +105,9 @@ const configuration = {
     new ProvidePlugin({
       React: "react", // Automatically load React when it is used
     }),
-    // new DefinePlugin({
-    //   "react-native$": "react-native-web",
-    // }),
+    new DefinePlugin({
+      "react-native$": "react-native-web",
+    }),
   ],
   devServer: {
     static: {

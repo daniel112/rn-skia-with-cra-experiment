@@ -1,16 +1,28 @@
-vanilla reactJS is too much of a hassle to make work with react-native skia and reanimated
+Documentation on web support is limited on react-native-skia and react-native-reanimated. This is an experiment to see if it is possible to integrate react-native-skia and react-native-reanimated on a vanilla React App (not using react-native-web) with webpack.
 
-says here
+# Summary
 
-- https://github.com/software-mansion/react-native-reanimated/issues/4335
+Configuring the `babel` and `webpack` configs are not as straight forward as it seems.
+Following the documentation doesn't work as expected. The `react-native-skia` and `react-native-reanimated` packages are not being transpiled correctly unless we utilize react-native-web or expo
 
-Suggestion:
+- https://docs.swmansion.com/react-native-reanimated/docs/guides/web-support/#webpack-support
+- https://shopify.github.io/react-native-skia/docs/getting-started/web/
 
-1. build for react native + react native web. Then:
+## What Works
 
-- Iframe into the webApp with some restricted params, can potentially utilize postmessage to communicate between the two
-- see if we can export it as a web component and use it in the webApp (hard)
+Importing and rendering skia components seems to work ok. I am able to load basic Circle component. Any functionality that doesn't use `react-native-reanimated` works fine so far.
 
-2. Build for Web and Webview into react native apps
+## Blocker
 
-- use postmessage for communication between the two
+- `react-native-skia` has external use/dependency on `react-native-reanimated`. After all the set up recommended by the docs above, there is an issue where the webApp is unable to load any hooks from `react-native-reanimated`.
+
+## Approach
+
+1. Get the `react-native-skia` and `react-native-reanimated` packages to build on a vanilla React App :white_check_mark:
+2. Get several working (simple to complex) examples to work on the vanilla React App :x:
+3. Look into [Rollup](https://rollupjs.org/) to create a external package that can be imported into the vanilla React App :small_orange_diamond:
+
+# Running
+
+- npm install
+- npm start
